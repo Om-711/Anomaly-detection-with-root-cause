@@ -38,7 +38,6 @@ for anomaly in metric_metadata[:5]:
 
 while not event_queue.empty():
     anomaly = event_queue.get()
-    print(event_queue.qsize())
     candidate_json = get_cause_llm(anomaly)   
     candidate_results.append(candidate_json)
 
