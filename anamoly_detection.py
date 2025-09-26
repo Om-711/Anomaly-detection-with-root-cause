@@ -43,7 +43,7 @@ def detect_anomalies_melt(metrics_df, log_df, event_df, trace_df):
 
     # print("\nAnamoly detection using SVM......") 
     oc_svm = OneClassSVM(nu=0.05, kernel='rbf', gamma='auto') 
-    metrics_df['anomaly_svm'] = oc_svm.fit_predict(X)
+    metrics_df['metrics_svm'] = oc_svm.fit_predict(X)
 
     # Statistical z-score
     metrics_df['metrics_stat'] = (np.abs(zscore(metrics_df['cpu_usage'])) > 3).astype(int)
