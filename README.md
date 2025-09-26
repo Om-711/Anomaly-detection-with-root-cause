@@ -41,15 +41,6 @@ Anomaly-detection-with-root-cause/
 └── README.md               # Project documentation
 ```
 
-## Prerequisites
-
-Before installing and running this project, ensure you have:
-
-- Python 3.8 or higher
-- pip package manager
-- Docker (optional, for containerized deployment)
-- Minimum 4GB RAM recommended
-- Network access for LLM integration
 
 ## Installation
 
@@ -105,6 +96,7 @@ python anomaly_detection.py
 
 # Evaluate results
 python metadata_evaluation.py
+python event_queue.py
 ```
 
 ### Detailed Usage
@@ -113,105 +105,45 @@ python metadata_evaluation.py
 Create synthetic MELT data for testing and development:
 
 ```bash
-python generate_data.py --services 5 --duration 24 --interval 1
+python generate_data.py 
 ```
-
-Options:
-- `--services`: Number of microservices to simulate (default: 3)
-- `--duration`: Duration in hours (default: 12)
-- `--interval`: Data point interval in minutes (default: 1)
-
 #### 2. Anomaly Detection
 Process data and detect anomalies:
 
 ```bash
-python anomaly_detection.py --input data/ --output results/ --models all
+python anomaly_detection.py 
 ```
-
-Options:
-- `--input`: Input data directory
-- `--output`: Output directory for results
-- `--models`: Models to use (isolation, zscore, lstm, all)
-- `--threshold`: Anomaly threshold (default: 0.95)
 
 #### 3. Metadata Evaluation
 Assess the quality of generated metadata:
 
 ```bash
-python metadata_evaluation.py --results results/ --metrics accuracy,precision,recall
+python metadata_evaluation.py 
 ```
-
-## Configuration
-
-### Environment Variables
-
-Set these environment variables for optimal performance:
+#### 4. Root-Cause LLM explanation
 
 ```bash
-export ANOMALY_THRESHOLD=0.95
-export LLM_API_KEY=your_api_key_here
-export LOG_LEVEL=INFO
-export BATCH_SIZE=1000
+python event_queue.py
 ```
-
-### Configuration File
-
-Create a `config.yaml` file for advanced configuration:
-
-```yaml
-detection:
-  models:
-    isolation_forest:
-      contamination: 0.1
-      n_estimators: 100
-    zscore:
-      threshold: 3.0
-    lstm:
-      sequence_length: 50
-      epochs: 100
-
-processing:
-  batch_size: 1000
-  parallel_workers: 4
-  
-output:
-  format: json
-  include_explanations: true
-```
-
 ## Example Output
 
 The system generates structured metadata for detected anomalies:
 
 ```json
 {
-  "timestamp": "2024-09-26T10:30:00Z",
-  "service": "auth-service",
-  "component": "log",
-  "feature": "ERROR_count",
-  "anomaly_details": {
-    "value": 50,
-    "expected_range": "5-15",
-    "anomaly_type": "unusual_frequency",
-    "severity": "high",
-    "confidence": 0.87
-  },
-  "root_cause_analysis": {
-    "correlated_anomalies": [
-      {
-        "service": "database-service",
-        "metric": "connection_timeout",
-        "correlation_score": 0.94
-      }
-    ],
-    "suggested_causes": [
-      "Database connection pool exhaustion",
-      "Network latency spike",
-      "Service overload"
-    ]
-  },
-  "explanation": "Authentication service showing 3x higher error rate than normal, strongly correlated with database timeout issues."
-}
+ {'timestamp': Timestamp('2025-09-26 00:10:00'),
+  'service': 'auth-service',
+  'component': 'metric',
+  'feature': 'cpu_usage/mem_usage/response_time',
+  'value': 69,
+  'anomaly_type': 'spike'},
+```
+
+The LLM will then generates the root cause for the metadata:
+```json
+{'root_cause': 'Widespread resource contention and performance bottlenecks across core services (auth, cache, database, frontend), likely triggered by increased workload, inefficient code/queries, or underlying infrastructure limitations.',
+ 'severity': 'High',
+ 'suggested_action': 'Immediately review traffic patterns and recent deployments. Deep-dive into database and cache performance metrics, and consider scaling resources or optimizing application code.'}
 ```
 ## Troubleshooting
 
@@ -222,7 +154,6 @@ The system generates structured metadata for detected anomalies:
 
 
 **Low Detection Accuracy**
-- Adjust thresholds:
 - Retrain models with more data: 
 
 **LLM Integration Failures**
@@ -260,4 +191,5 @@ python -m pytest tests/
 black anomaly_detection.py
 flake8 anomaly_detection.py
 ```
+
 
