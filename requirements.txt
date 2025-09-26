@@ -1,0 +1,8 @@
+pandas
+numpy
+torch
+scikit-learn
+langchain
+langchain-google-generative-ai
+python-dotenv
+torchvision
