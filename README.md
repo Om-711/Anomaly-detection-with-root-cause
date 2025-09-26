@@ -143,9 +143,12 @@ The system generates structured metadata for detected anomalies:
 
 The LLM will then generates the root cause for the metadata:
 ```json
-{'root_cause': 'Widespread resource contention and performance bottlenecks across core services (auth, cache, database, frontend), likely triggered by increased workload, inefficient code/queries, or underlying infrastructure limitations.',
- 'severity': 'High',
- 'suggested_action': 'Immediately review traffic patterns and recent deployments. Deep-dive into database and cache performance metrics, and consider scaling resources or optimizing application code.'}
+{
+  "root_cause": "Widespread resource contention and performance bottlenecks across core services (auth, cache, database, frontend), likely triggered by increased workload, inefficient code or queries, or underlying infrastructure limitations.",
+  "severity": "High",
+  "suggested_action": "Immediately review traffic patterns and recent deployments. Perform a deep dive into database and cache performance metrics, and consider scaling resources or optimizing application code."
+}
+
 ```
 ## Troubleshooting
 
@@ -165,6 +168,7 @@ Run in debug mode for detailed troubleshooting:
 ```bash
 python anomaly_detection.py --debug --verbose
 ```
+
 
 
 
