@@ -131,12 +131,14 @@ The system generates structured metadata for detected anomalies:
 
 ```json
 {
- {'timestamp': Timestamp('2025-09-26 00:10:00'),
-  'service': 'auth-service',
-  'component': 'metric',
-  'feature': 'cpu_usage/mem_usage/response_time',
-  'value': 69,
-  'anomaly_type': 'spike'},
+  "timestamp": "2025-09-26 00:10:00",
+  "service": "auth-service",
+  "component": "metric",
+  "feature": "cpu_usage/mem_usage/response_time",
+  "value": 69,
+  "anomaly_type": "spike"
+}
+
 ```
 
 The LLM will then generates the root cause for the metadata:
@@ -148,11 +150,6 @@ The LLM will then generates the root cause for the metadata:
 ## Troubleshooting
 
 ### Common Issues
-
-**Memory Errors with Large Datasets**
-- Reduce batch size: `--batch-size 500`
-
-
 **Low Detection Accuracy**
 - Retrain models with more data: 
 
@@ -169,27 +166,5 @@ Run in debug mode for detailed troubleshooting:
 python anomaly_detection.py --debug --verbose
 ```
 
-## Contributing
-
-We welcome contributions to improve this project. Please follow these guidelines:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with appropriate tests
-4. Submit a pull request with detailed description
-
-### Development Setup
-
-```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-python -m pytest tests/
-
-# Code formatting
-black anomaly_detection.py
-flake8 anomaly_detection.py
-```
 
 
