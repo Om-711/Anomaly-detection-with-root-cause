@@ -1,106 +1,263 @@
-# Anomaly Detection with Root Cause
+# Anomaly Detection with Root Cause Analysis
 
 ## Overview
 
-This repository presents an end-to-end solution for detecting anomalies in microservices architectures and pinpointing their root causes. By integrating metrics, logs, events, and traces (collectively referred to as MELT data), the system employs machine learning techniques to identify and explain anomalies, facilitating proactive system monitoring and maintenance.
+An end-to-end solution for detecting anomalies in microservices architectures and identifying their root causes. This system integrates MELT data (Metrics, Events, Logs, Traces) using advanced machine learning techniques to provide proactive system monitoring and intelligent anomaly explanation.
 
----
+## Key Features
 
-## Features
+### Multi-Model Anomaly Detection
+- Isolation Forest: Detects outliers in high-dimensional data
+- Z-Score Analysis: Identifies statistical anomalies  
+- LSTM Autoencoders: Captures temporal patterns and sequences
+- Ensemble Methods: Combines multiple models for improved accuracy
 
-- **Comprehensive Anomaly Detection**: Utilizes multiple models, including Isolation Forest, z-score analysis, and LSTM Autoencoders, to detect anomalies across various data types.
-- **Root Cause Analysis**: Correlates anomalies across different data sources to identify potential root causes.
-- **Metadata Generation**: Produces structured metadata summarizing detected anomalies, aiding in efficient analysis and reporting.
-- **Scalability**: Designed to handle large volumes of MELT data, suitable for enterprise-level applications.
+### Comprehensive Root Cause Analysis
+- Cross-Data Correlation: Links anomalies across metrics, logs, events, and traces
+- Dependency Mapping: Understands service interdependencies
+- Temporal Analysis: Identifies causation chains through time-based correlation
 
----
+### Intelligent Metadata Generation
+- Structured Output: JSON-formatted anomaly summaries
+- Context-Aware Descriptions: Meaningful explanations for each anomaly
+- Severity Classification: Risk assessment and priority scoring
+
+### Enterprise-Ready Scalability
+- High-Volume Processing: Handles massive MELT data streams
+- Distributed Architecture: Scales horizontally across multiple nodes
+- Real-Time Processing: Low-latency anomaly detection
 
 ## Directory Structure
 
+```
 Anomaly-detection-with-root-cause/
-│
-├── anomaly_detection.py # Core anomaly detection logic
-├── event_queue.py # Event queue processing
-├── generate_data.py # Synthetic data generation for testing
-├── llm_explanation.py # Integration with LLMs for anomaly explanation
-├── metadata_evaluation.py # Evaluation of generated metadata
-├── requirements.txt # Python dependencies
-└── Dockerfile # Containerization for deployment
+├── anomaly_detection.py       # Core anomaly detection algorithms
+├── event_queue.py            # Event queue processing and management
+├── generate_data.py          # Synthetic MELT data generation
+├── llm_explanation.py        # LLM integration for anomaly explanation
+├── metadata_evaluation.py    # Metadata quality assessment
+├── requirements.txt          # Python package dependencies
+├── Dockerfile               # Container configuration
+└── README.md               # Project documentation
+```
 
+## Prerequisites
 
----
+Before installing and running this project, ensure you have:
 
-## Setup and Installation
+- Python 3.8 or higher
+- pip package manager
+- Docker (optional, for containerized deployment)
+- Minimum 4GB RAM recommended
+- Network access for LLM integration
 
-### Prerequisites
+## Installation
 
-Ensure you have the following installed:
+### Method 1: Local Installation
 
-- Python 3.8+
-- pip
-- Docker (for containerized deployment)
+1. Clone the repository
+```bash
+git clone https://github.com/Om-711/Anomaly-detection-with-root-cause.git
+cd Anomaly-detection-with-root-cause
+```
 
-### Installation Steps
+2. Create a virtual environment (recommended)
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/Om-711/Anomaly-detection-with-root-cause.git
-   cd Anomaly-detection-with-root-cause
-Install required Python packages:
-
+3. Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
+### Method 2: Docker Installation
 
-(Optional) Build and run the Docker container:
+1. Clone the repository
+```bash
+git clone https://github.com/Om-711/Anomaly-detection-with-root-cause.git
+cd Anomaly-detection-with-root-cause
+```
 
+2. Build the Docker image
+```bash
 docker build -t anomaly-detection .
+```
+
+3. Run the container
+```bash
 docker run -p 5000:5000 anomaly-detection
+```
 
-Usage
-Synthetic Data Generation
+## Usage
 
-To generate synthetic MELT data for testing:
+### Quick Start
 
+Generate synthetic test data and run anomaly detection:
+
+```bash
+# Generate sample MELT data
 python generate_data.py
 
-
-This script creates sample datasets for metrics, logs, events, and traces.
-
-Anomaly Detection
-
-Run the anomaly detection process:
-
+# Run anomaly detection
 python anomaly_detection.py
 
-
-This will process the synthetic data, detect anomalies, and output the results.
-
-Metadata Evaluation
-
-To evaluate the generated metadata:
-
+# Evaluate results
 python metadata_evaluation.py
+```
 
+### Detailed Usage
 
-This script assesses the quality and relevance of the metadata produced during anomaly detection.
+#### 1. Data Generation
+Create synthetic MELT data for testing and development:
 
-Example Output
+```bash
+python generate_data.py --services 5 --duration 24 --interval 1
+```
 
-Upon successful execution, the system will output metadata summaries indicating detected anomalies, such as:
+Options:
+- `--services`: Number of microservices to simulate (default: 3)
+- `--duration`: Duration in hours (default: 12)
+- `--interval`: Data point interval in minutes (default: 1)
 
+#### 2. Anomaly Detection
+Process data and detect anomalies:
+
+```bash
+python anomaly_detection.py --input data/ --output results/ --models all
+```
+
+Options:
+- `--input`: Input data directory
+- `--output`: Output directory for results
+- `--models`: Models to use (isolation, zscore, lstm, all)
+- `--threshold`: Anomaly threshold (default: 0.95)
+
+#### 3. Metadata Evaluation
+Assess the quality of generated metadata:
+
+```bash
+python metadata_evaluation.py --results results/ --metrics accuracy,precision,recall
+```
+
+## Configuration
+
+### Environment Variables
+
+Set these environment variables for optimal performance:
+
+```bash
+export ANOMALY_THRESHOLD=0.95
+export LLM_API_KEY=your_api_key_here
+export LOG_LEVEL=INFO
+export BATCH_SIZE=1000
+```
+
+### Configuration File
+
+Create a `config.yaml` file for advanced configuration:
+
+```yaml
+detection:
+  models:
+    isolation_forest:
+      contamination: 0.1
+      n_estimators: 100
+    zscore:
+      threshold: 3.0
+    lstm:
+      sequence_length: 50
+      epochs: 100
+
+processing:
+  batch_size: 1000
+  parallel_workers: 4
+  
+output:
+  format: json
+  include_explanations: true
+```
+
+## Example Output
+
+The system generates structured metadata for detected anomalies:
+
+```json
 {
-  "timestamp": "2025-09-26T10:30:00",
+  "timestamp": "2024-09-26T10:30:00Z",
   "service": "auth-service",
   "component": "log",
-  "feature": "ERROR count",
-  "value": 50,
-  "anomaly_type": "unusual_frequency"
+  "feature": "ERROR_count",
+  "anomaly_details": {
+    "value": 50,
+    "expected_range": "5-15",
+    "anomaly_type": "unusual_frequency",
+    "severity": "high",
+    "confidence": 0.87
+  },
+  "root_cause_analysis": {
+    "correlated_anomalies": [
+      {
+        "service": "database-service",
+        "metric": "connection_timeout",
+        "correlation_score": 0.94
+      }
+    ],
+    "suggested_causes": [
+      "Database connection pool exhaustion",
+      "Network latency spike",
+      "Service overload"
+    ]
+  },
+  "explanation": "Authentication service showing 3x higher error rate than normal, strongly correlated with database timeout issues."
 }
+```
+## Troubleshooting
+
+### Common Issues
+
+**Memory Errors with Large Datasets**
+- Reduce batch size: `--batch-size 500`
 
 
-This structured metadata facilitates efficient analysis and reporting.
+**Low Detection Accuracy**
+- Adjust thresholds:
+- Retrain models with more data: 
 
-Integration with Large Language Models (LLMs)
+**LLM Integration Failures**
+- Check API key configuration
+- Verify network connectivity
+- Review API rate limits
 
-The llm_explanation.py script integrates with Large Language Models to provide natural language explanations for detected anomalies. This aids in understanding the context and potential impact of anomalies in the system.
+### Debug Mode
+
+Run in debug mode for detailed troubleshooting:
+
+```bash
+python anomaly_detection.py --debug --verbose
+```
+
+## Contributing
+
+We welcome contributions to improve this project. Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with appropriate tests
+4. Submit a pull request with detailed description
+
+### Development Setup
+
+```bash
+# Install development dependencies
+pip install -r requirements-dev.txt
+
+# Run tests
+python -m pytest tests/
+
+# Code formatting
+black anomaly_detection.py
+flake8 anomaly_detection.py
+```
+
